@@ -39,11 +39,20 @@ public class FutureResult {
         return response!=null;
     }
 
-    public static void recive(ClientResponse response){
+    public static void receive(ClientResponse response){
         FutureResult result = results.get(response.getId());
         if (result!=null){
-            result.setResponse(response);
-            result.condition.signal();
+            Lock lock = result.lock;
+            lock.lock();
+            try {
+                result.setResponse(response);
+                result.condition.signal();
+            }catch (Exception e){
+                e.printStackTrace();
+            }finally {
+                lock.unlock();
+            }
+
         }
     }
 
