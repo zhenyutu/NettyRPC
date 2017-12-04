@@ -10,7 +10,7 @@ import org.apache.curator.retry.ExponentialBackoffRetry;
  * @author tuzhenyu
  */
 public class ZookeeperFactory {
-    public static  CuratorFramework client;
+    private static  CuratorFramework client;
 
     public static CuratorFramework create(){
         if (client==null){
@@ -23,7 +23,7 @@ public class ZookeeperFactory {
 
     public static void main(String[] args) throws Exception{
         CuratorFramework client = create();
-        client.create().forPath("/netty");
+        client.create().forPath("/nettyServer");
         System.out.println("finish the creation");
     }
 }

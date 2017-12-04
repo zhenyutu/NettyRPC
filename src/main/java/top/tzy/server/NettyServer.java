@@ -1,10 +1,20 @@
 package top.tzy.server;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.string.StringEncoder;
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.zookeeper.CreateMode;
+import top.tzy.constant.Constant;
+import top.tzy.factory.ZookeeperFactory;
+
+import java.net.InetAddress;
+
 /**
  * Created by tuzhenyu on 17-12-3.
  * @author tuzhenyu
@@ -21,14 +31,37 @@ public class NettyServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
-                            ChannelPipeline pipeline = ch.pipeline();
+                            ch.pipeline().addLast(new StringEncoder());
+                            ch.pipeline().addLast(new SimpleServerHandler());
                         }
                     });
             ChannelFuture f = b.bind(8008).sync();
+
+            CuratorFramework zookeeper = ZookeeperFactory.create();
+            InetAddress address = InetAddress.getLocalHost();
+            zookeeper.create().withMode(CreateMode.EPHEMERAL).forPath(Constant.Server_Path+address.getHostAddress());
+
             f.channel().closeFuture().sync();
         }catch (Exception e){
+            e.printStackTrace();
+        }finally {
             bossGroup.shutdownGracefully();
             workGroup.shutdownGracefully();
         }
     }
+}
+
+class SimpleServerHandler extends ChannelInboundHandlerAdapter{
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        ctx.writeAndFlush("Hello,World!");
+        ctx.channel().close();
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        ctx.close();
+    }
+
 }
