@@ -1,21 +1,22 @@
 package top.tzy.client;
 
+import com.alibaba.fastjson.JSONObject;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import top.tzy.constant.Constant;
 
 /**
  * Created by tuzhenyu on 17-12-4.
  * @author tuzhenyu
  */
 public class NettyClient {
-    private void connect(String host,int port){
+    public static ChannelFuture f;
+    static {
         EventLoopGroup group = new NioEventLoopGroup();
         try {
             Bootstrap b = new Bootstrap();
@@ -29,22 +30,21 @@ public class NettyClient {
                         }
                     });
 
-            ChannelFuture f = b.connect(host,port).sync();
-
-            f.channel().writeAndFlush("hello,world!");
-
+            f = b.connect(Constant.Host,Constant.Port).sync();
             f.channel().closeFuture().sync();
         }catch (Exception e){
             e.printStackTrace();
         }finally {
             group.shutdownGracefully();
         }
-
     }
 
-    public static void main(String[] args) {
-        new NettyClient().connect("127.0.0.1",8008);
+    public static ClientResponse send(ClientRequest requset){
+        f.channel().writeAndFlush(requset);
+        FutureResult futureResult = new FutureResult(requset);
+        return futureResult.get();
     }
+
 }
 
 class SimpleClientHandler extends ChannelInboundHandlerAdapter {
@@ -52,6 +52,8 @@ class SimpleClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println(msg.toString());
+        ClientResponse response = JSONObject.parseObject(msg.toString(),ClientResponse.class);
+        FutureResult.recive(response);
         ctx.channel().close();
     }
 
