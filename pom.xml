@@ -12,6 +12,8 @@
         <module>rpc-common</module>
         <module>rpc-server</module>
         <module>rpc-client</module>
+        <module>rpc-api</module>
+        <module>rpc-registry</module>
     </modules>
 
     <properties>
