@@ -1,4 +1,4 @@
-package top.txy;
+package top.tzy.server;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;

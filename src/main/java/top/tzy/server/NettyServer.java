@@ -3,8 +3,6 @@ package top.tzy.server;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -15,8 +13,8 @@ import io.netty.handler.codec.string.StringEncoder;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.zookeeper.CreateMode;
 import org.springframework.stereotype.Component;
-import top.tzy.constant.Constant;
-import top.tzy.factory.ZookeeperFactory;
+import top.tzy.Constant;
+import top.tzy.registry.ZookeeperFactory;
 
 import javax.annotation.PostConstruct;
 import java.net.InetAddress;
@@ -42,7 +40,7 @@ public class NettyServer {
                             ch.pipeline().addLast(new LineBasedFrameDecoder(1024));
                             ch.pipeline().addLast(new StringDecoder());
                             ch.pipeline().addLast(new StringEncoder());
-                            ch.pipeline().addLast(new SimpleServerHandler());
+                            ch.pipeline().addLast(new ServerHandler());
                         }
                     });
             ChannelFuture f = b.bind(8008).sync();
@@ -59,33 +57,4 @@ public class NettyServer {
             workGroup.shutdownGracefully();
         }
     }
-}
-
-class SimpleServerHandler extends ChannelInboundHandlerAdapter{
-
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("server active");
-    }
-
-    @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ServerRequest request = JSONObject.parseObject(msg.toString(),ServerRequest.class);
-        ServerResponse response = new ServerResponse();
-        response.setId(request.getId());
-        response.setContent("server:Hello world");
-        ctx.writeAndFlush(JSON.toJSONString(response)+"\n");
-    }
-
-    @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("close");
-    }
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        System.out.println("error");
-        ctx.close();
-    }
-
 }

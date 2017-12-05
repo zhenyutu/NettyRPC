@@ -1,4 +1,4 @@
-package top.tzy.factory;
+package top.tzy.registry;
 
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;

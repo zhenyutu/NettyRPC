@@ -1,4 +1,4 @@
-package top.tzy.constant;
+package top.tzy;
 
 /**
  * Created by tuzhenyu on 17-12-4.

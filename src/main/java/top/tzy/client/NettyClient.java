@@ -10,7 +10,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
-import top.tzy.constant.Constant;
+import top.tzy.Constant;
 
 /**
  * Created by tuzhenyu on 17-12-4.
@@ -30,7 +30,7 @@ public class NettyClient {
                             socketChannel.pipeline().addLast(new LineBasedFrameDecoder(1024));
                             socketChannel.pipeline().addLast(new StringDecoder());
                             socketChannel.pipeline().addLast(new StringEncoder());
-                            socketChannel.pipeline().addLast(new SimpleClientHandler());
+                            socketChannel.pipeline().addLast(new ClientHandler());
                         }
                     });
 
@@ -53,30 +53,4 @@ public class NettyClient {
         System.out.println(response.getContent());
     }
 
-}
-
-class SimpleClientHandler extends ChannelInboundHandlerAdapter {
-
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("client active");
-    }
-
-    @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ClientResponse response = JSONObject.parseObject(msg.toString(),ClientResponse.class);
-        FutureResult.receive(response);
-    }
-
-    @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("close");
-    }
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        System.out.println("error");
-        cause.printStackTrace();
-        ctx.close();
-    }
 }
