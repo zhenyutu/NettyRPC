@@ -3,6 +3,7 @@ package top.tzy.client;
 import com.alibaba.fastjson.JSONObject;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import top.tzy.protocol.RpcResponse;
 
 /**
  * Created by tuzhenyu on 17-12-5.
@@ -16,7 +17,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ClientResponse response = JSONObject.parseObject(msg.toString(),ClientResponse.class);
+        RpcResponse response = JSONObject.parseObject(msg.toString(),RpcResponse.class);
         FutureResult.receive(response);
     }
 

@@ -11,6 +11,8 @@ import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import top.tzy.Constant;
+import top.tzy.protocol.RpcRequest;
+import top.tzy.protocol.RpcResponse;
 
 /**
  * Created by tuzhenyu on 17-12-4.
@@ -40,17 +42,10 @@ public class NettyClient {
         }
     }
 
-    public static ClientResponse send(ClientRequest request){
+    public static RpcResponse send(RpcRequest request){
         f.channel().writeAndFlush(JSON.toJSONString(request)+"\n");
         FutureResult futureResult = new FutureResult(request);
         return futureResult.get();
-    }
-
-    public static void main(String[] args) {
-        ClientRequest request = new ClientRequest();
-
-        ClientResponse response = NettyClient.send(request);
-        System.out.println(response.getContent());
     }
 
 }

@@ -1,8 +1,11 @@
 package top.tzy.client;
 
-import javax.xml.ws.Response;
+import top.tzy.protocol.RpcRequest;
+import top.tzy.protocol.RpcResponse;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.UUID;
 
 /**
  * Created by tuzhenyu on 17-12-5.
@@ -11,13 +14,14 @@ import java.lang.reflect.Method;
 public class ProxyHandler implements InvocationHandler {
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        ClientRequest request = new ClientRequest();
+        RpcRequest request = new RpcRequest();
+        request.setId(UUID.randomUUID().toString());
         request.setClassName(method.getDeclaringClass().getName());
         request.setMethodName(method.getName());
         request.setParameterTypes(method.getParameterTypes());
         request.setParameters(args);
 
-        ClientResponse response = NettyClient.send(request);
+        RpcResponse response = NettyClient.send(request);
         return response.getContent();
     }
 }

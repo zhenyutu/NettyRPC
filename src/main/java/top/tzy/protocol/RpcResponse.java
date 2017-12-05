@@ -1,25 +1,31 @@
 package top.tzy.protocol;
 
+import javax.swing.plaf.PanelUI;
+
 /**
  * 组装rpc response
  * @author tuzhenyu
  */
 public class RpcResponse {
-    private String requestId;
+    private String id;
     private String error;
     // 返回值不能是基本类型
-    private Object result;
+    private Object content;
 
     public boolean isError() {
         return error != null;
     }
 
-    public String getRequestId() {
-        return requestId;
+    public String getId() {
+        return id;
     }
 
-    public void setRequestId(String requestId) {
-        this.requestId = requestId;
+    public void setId(String id){
+        this.id = id;
+    }
+
+    public void setRequestId(String id) {
+        this.id = id;
     }
 
     public String getError() {
@@ -30,20 +36,20 @@ public class RpcResponse {
         this.error = error;
     }
 
-    public Object getResult() {
-        return result;
+    public Object getContent() {
+        return content;
     }
 
-    public void setResult(Object result) {
-        this.result = result;
+    public void setContent(Object content) {
+        this.content = content;
     }
 
     @Override
     public String toString() {
         return "RpcResponse{" +
-                "requestId='" + requestId + '\'' +
+                "id='" + id + '\'' +
                 ", error='" + error + '\'' +
-                ", result=" + result +
+                ", content=" + content +
                 '}';
     }
 }

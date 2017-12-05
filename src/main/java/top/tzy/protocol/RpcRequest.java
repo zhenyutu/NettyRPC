@@ -9,18 +9,18 @@ import java.util.Arrays;
  */
 public class RpcRequest {
 
-    private String requestId;
+    private String id;
     private String className;
     private String methodName;
     private Class<?>[] parameterTypes;
     private Object[] parameters;
 
-    public String getRequestId() {
-        return requestId;
+    public String getId() {
+        return id;
     }
 
-    public void setRequestId(String requestId) {
-        this.requestId = requestId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getClassName() {
@@ -58,7 +58,7 @@ public class RpcRequest {
     @Override
     public String toString() {
         return "RpcRequest{" +
-                "requestId='" + requestId + '\'' +
+                "id='" + id + '\'' +
                 ", className='" + className + '\'' +
                 ", methodName='" + methodName + '\'' +
                 ", parameterTypes=" + Arrays.toString(parameterTypes) +

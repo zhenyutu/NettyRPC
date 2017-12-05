@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import top.tzy.protocol.RpcRequest;
+import top.tzy.protocol.RpcResponse;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -27,14 +29,14 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ServerRequest request = JSONObject.parseObject(msg.toString(),ServerRequest.class);
-        ServerResponse response = new ServerResponse();
+        RpcRequest request = JSONObject.parseObject(msg.toString(),RpcRequest.class);
+        RpcResponse response = new RpcResponse();
         response.setId(request.getId());
         response.setContent(handler(request));
         ctx.writeAndFlush(JSON.toJSONString(response)+"\n");
     }
 
-    private Object handler(ServerRequest request)throws Exception{
+    private Object handler(RpcRequest request)throws Exception{
         String className = request.getClassName();
         Object bean = services.get(className);
 
