@@ -14,17 +14,21 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.zookeeper.CreateMode;
+import org.springframework.stereotype.Component;
 import top.tzy.constant.Constant;
 import top.tzy.factory.ZookeeperFactory;
 
+import javax.annotation.PostConstruct;
 import java.net.InetAddress;
 
 /**
  * Created by tuzhenyu on 17-12-3.
  * @author tuzhenyu
  */
+@Component
 public class NettyServer {
-    public static void main(String[] args) {
+    @PostConstruct
+    public void ServerStart() {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workGroup = new NioEventLoopGroup();
 
