@@ -1,24 +1,26 @@
-package top.tzy.server;
+package top.tzy.protocol;
 
 import java.util.Arrays;
 
 /**
- * Created by tuzhenyu on 17-12-4.
+ * 组装一次服务的参数
+ *
  * @author tuzhenyu
  */
-public class ServerRequest {
-    private long id;
+public class RpcRequest {
+
+    private String requestId;
     private String className;
     private String methodName;
     private Class<?>[] parameterTypes;
     private Object[] parameters;
 
-    public long getId() {
-        return id;
+    public String getRequestId() {
+        return requestId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 
     public String getClassName() {
@@ -56,7 +58,7 @@ public class ServerRequest {
     @Override
     public String toString() {
         return "RpcRequest{" +
-                "requestId='" + id + '\'' +
+                "requestId='" + requestId + '\'' +
                 ", className='" + className + '\'' +
                 ", methodName='" + methodName + '\'' +
                 ", parameterTypes=" + Arrays.toString(parameterTypes) +

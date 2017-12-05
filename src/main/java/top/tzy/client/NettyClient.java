@@ -48,7 +48,7 @@ public class NettyClient {
 
     public static void main(String[] args) {
         ClientRequest request = new ClientRequest();
-        request.setContent("client:hello hello");
+
         ClientResponse response = NettyClient.send(request);
         System.out.println(response.getContent());
     }

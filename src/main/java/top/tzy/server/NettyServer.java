@@ -12,21 +12,28 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.zookeeper.CreateMode;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import top.tzy.Constant;
 import top.tzy.registry.ZookeeperFactory;
 
-import javax.annotation.PostConstruct;
 import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by tuzhenyu on 17-12-3.
  * @author tuzhenyu
  */
 @Component
-public class NettyServer {
-    @PostConstruct
-    public void ServerStart() {
+public class NettyServer implements InitializingBean, ApplicationContextAware {
+
+    private Map<String,Object> services = new HashMap<String,Object>();
+
+    public void afterPropertiesSet() throws Exception {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workGroup = new NioEventLoopGroup();
 
@@ -40,7 +47,7 @@ public class NettyServer {
                             ch.pipeline().addLast(new LineBasedFrameDecoder(1024));
                             ch.pipeline().addLast(new StringDecoder());
                             ch.pipeline().addLast(new StringEncoder());
-                            ch.pipeline().addLast(new ServerHandler());
+                            ch.pipeline().addLast(new ServerHandler(services));
                         }
                     });
             ChannelFuture f = b.bind(8008).sync();
@@ -55,6 +62,14 @@ public class NettyServer {
         }finally {
             bossGroup.shutdownGracefully();
             workGroup.shutdownGracefully();
+        }
+    }
+
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        Map<String,Object> beans = applicationContext.getBeansWithAnnotation(RpcService.class);
+        for (Object serviceBean : beans.values()){
+            String interfaceName = serviceBean.getClass().getAnnotation(RpcService.class).value().getName();
+            services.put(interfaceName,serviceBean);
         }
     }
 }
