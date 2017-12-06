@@ -2,6 +2,7 @@ package top.tzy.rpc.client;
 
 import top.tzy.rpc.common.protocol.RpcRequest;
 import top.tzy.rpc.common.protocol.RpcResponse;
+import top.tzy.rpc.registry.ServiceDiscover;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -32,7 +33,12 @@ class ProxyHandler implements InvocationHandler {
         request.setParameterTypes(method.getParameterTypes());
         request.setParameters(args);
 
-        RpcResponse response = NettyClient.send(request);
+        String interfaceName = method.getDeclaringClass().getName();
+        String serviceAddress = ServiceDiscover.discover(interfaceName);
+        String host = serviceAddress.split(":")[0];
+        int port = Integer.parseInt(serviceAddress.split(":")[1]);
+        NettyClient client = new NettyClient(host,port);
+        RpcResponse response = client.send(request);
         return response.getContent();
     }
 }

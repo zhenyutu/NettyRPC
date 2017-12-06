@@ -53,7 +53,6 @@ public class NettyServer implements InitializingBean, ApplicationContextAware {
 
             InetAddress address = InetAddress.getLocalHost();
             String localhost = address.getHostAddress()+":"+Constant.Server_Port;
-            System.out.println(localhost);
             for (String interfaceName : services.keySet()){
                 ServiceRegistry.register(interfaceName,localhost);
             }

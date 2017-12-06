@@ -12,7 +12,6 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
-import top.tzy.rpc.common.Constant;
 import top.tzy.rpc.common.protocol.RpcRequest;
 import top.tzy.rpc.common.protocol.RpcResponse;
 
@@ -21,9 +20,17 @@ import top.tzy.rpc.common.protocol.RpcResponse;
  * @author tuzhenyu
  */
 public class NettyClient {
-    private static final Bootstrap b = new Bootstrap();
-    private static ChannelFuture f = null;
-    static {
+    private String host;
+    private int port;
+
+    public NettyClient(String host,int port){
+        this.host = host;
+        this.port = port;
+    }
+
+    public RpcResponse send(RpcRequest request){
+        ChannelFuture f = null;
+        Bootstrap b = new Bootstrap();
         EventLoopGroup group = new NioEventLoopGroup();
         try {
 
@@ -38,13 +45,11 @@ public class NettyClient {
                         }
                     });
 
-            f = b.connect(Constant.Host,Constant.Port).sync();
+            f = b.connect(host,port).sync();
+
         }catch (Exception e){
             e.printStackTrace();
         }
-    }
-
-    public static RpcResponse send(RpcRequest request){
         f.channel().writeAndFlush(JSON.toJSONString(request)+"\n");
         FutureResult futureResult = new FutureResult(request);
         return futureResult.get();
