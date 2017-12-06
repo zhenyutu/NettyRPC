@@ -21,6 +21,12 @@
 
         <dependency>
             <groupId>top.tuzhenyu</groupId>
+            <artifactId>rpc-registry</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>top.tuzhenyu</groupId>
             <artifactId>rpc-api</artifactId>
             <version>${project.version}</version>
         </dependency>

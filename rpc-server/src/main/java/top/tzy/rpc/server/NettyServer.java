@@ -16,6 +16,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import top.tzy.rpc.common.Constant;
+import top.tzy.rpc.registry.ServiceRegistry;
 import top.tzy.rpc.registry.ZookeeperFactory;
 
 import java.net.InetAddress;
@@ -48,11 +49,14 @@ public class NettyServer implements InitializingBean, ApplicationContextAware {
                             ch.pipeline().addLast(new ServerHandler(services));
                         }
                     });
-            ChannelFuture f = b.bind(8008).sync();
+            ChannelFuture f = b.bind(Constant.Server_Port).sync();
 
-            CuratorFramework zookeeper = ZookeeperFactory.create();
             InetAddress address = InetAddress.getLocalHost();
-            zookeeper.create().withMode(CreateMode.EPHEMERAL).forPath(Constant.Server_Path+address.getHostAddress());
+            String localhost = address.getHostAddress()+":"+Constant.Server_Port;
+            System.out.println(localhost);
+            for (String interfaceName : services.keySet()){
+                ServiceRegistry.register(interfaceName,localhost);
+            }
 
             f.channel().closeFuture().sync();
         }catch (Exception e){

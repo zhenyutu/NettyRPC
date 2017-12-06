@@ -20,10 +20,4 @@ public class ZookeeperFactory {
         }
         return client;
     }
-
-    public static void main(String[] args) throws Exception{
-        CuratorFramework client = create();
-        client.create().forPath("/nettyServer");
-        System.out.println("finish the creation");
-    }
 }
