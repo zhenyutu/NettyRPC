@@ -11,9 +11,13 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan("top.tzy")
-public class Application {
+public class Provider {
     public static void main(String[] args) {
+        start();
+    }
+
+    public static void start(){
         ApplicationContext applicationContext =
-                new AnnotationConfigApplicationContext(Application.class);
+                new AnnotationConfigApplicationContext(Provider.class);
     }
 }

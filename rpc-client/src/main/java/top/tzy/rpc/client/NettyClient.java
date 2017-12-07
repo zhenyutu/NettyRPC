@@ -28,7 +28,7 @@ public class NettyClient {
         this.port = port;
     }
 
-    public RpcResponse send(RpcRequest request){
+    public RpcResponse send(RpcRequest request)throws Exception{
         ChannelFuture f = null;
         Bootstrap b = new Bootstrap();
         EventLoopGroup group = new NioEventLoopGroup();
@@ -47,12 +47,14 @@ public class NettyClient {
 
             f = b.connect(host,port).sync();
 
-        }catch (Exception e){
-            e.printStackTrace();
+            f.channel().writeAndFlush(JSON.toJSONString(request)+"\n");
+            FutureResult futureResult = new FutureResult(request);
+            return futureResult.get();
+
+        }finally {
+            group.shutdownGracefully();
         }
-        f.channel().writeAndFlush(JSON.toJSONString(request)+"\n");
-        FutureResult futureResult = new FutureResult(request);
-        return futureResult.get();
+
     }
 
 }

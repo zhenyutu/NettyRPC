@@ -12,6 +12,7 @@
         <module name="rpc-common" />
         <module name="rpc-registry" />
         <module name="rpc-server" />
+        <module name="rpc-test" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -21,6 +22,7 @@
       <module name="rpc-common" target="1.5" />
       <module name="rpc-registry" target="1.5" />
       <module name="rpc-server" target="1.5" />
+      <module name="rpc-test" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -23,11 +23,6 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("server active");
-    }
-
-    @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         RpcRequest request = JSONObject.parseObject(msg.toString(),RpcRequest.class);
         RpcResponse response = new RpcResponse();
@@ -48,11 +43,6 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         Method method = serviceClass.getMethod(methodName,parameterTypes);
         method.setAccessible(true);
         return method.invoke(bean,parameters);
-    }
-
-    @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("close");
     }
 
     @Override
