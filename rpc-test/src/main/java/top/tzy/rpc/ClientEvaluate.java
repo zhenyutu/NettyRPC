@@ -16,11 +16,12 @@ public class ClientEvaluate {
         RpcServiceProxy proxy = new RpcServiceProxy();
         HelloService service = proxy.create(HelloService.class);
 
-        for (int i=0;i<500;i++){
+        long start = System.currentTimeMillis();
+        for (int i=0;i<5000;i++){
             String str = service.hello("tuzhenyu");
-            Thread.sleep(50);
-            System.out.println(str);
+            System.out.println(str+i);
         }
+        System.out.println(System.currentTimeMillis()-start);
     }
 
 }

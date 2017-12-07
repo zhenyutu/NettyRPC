@@ -34,10 +34,7 @@ class ProxyHandler implements InvocationHandler {
         request.setParameters(args);
 
         String interfaceName = method.getDeclaringClass().getName();
-        String serviceAddress = ServiceDiscover.discover(interfaceName);
-        String host = serviceAddress.split(":")[0];
-        int port = Integer.parseInt(serviceAddress.split(":")[1]);
-        NettyClient client = new NettyClient(host,port);
+        ClientConnection client = ConnectionManager.getInstance().getConnection(interfaceName);
         RpcResponse response = client.send(request);
         return response.getContent();
     }
