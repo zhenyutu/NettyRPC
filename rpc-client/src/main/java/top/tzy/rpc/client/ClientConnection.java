@@ -47,9 +47,10 @@ public class ClientConnection {
     public RpcResponse send(RpcRequest request)throws Exception{
         if (f==null)
             throw new RuntimeException("channel is empty");
-
-        f.channel().writeAndFlush(JSON.toJSONString(request)+"\n");
         FutureResult futureResult = new FutureResult(request);
+        f.channel().writeAndFlush(JSON.toJSONString(request)+"\n");
+
+
         return futureResult.get();
     }
 
