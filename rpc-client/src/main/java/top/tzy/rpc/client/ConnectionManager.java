@@ -1,7 +1,5 @@
 package top.tzy.rpc.client;
 
-import top.tzy.rpc.registry.ServiceDiscover;
-
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -25,7 +23,7 @@ public class ConnectionManager {
 
     public ClientConnection getConnection(String interfaceName)throws Exception{
         ClientConnection clientConnection = null;
-        String serviceAddress = ServiceDiscover.discover(interfaceName);
+        String serviceAddress = ServiceDiscover.getInstance().discover(interfaceName);
         if (connections.get(serviceAddress)==null){
             String host = serviceAddress.split(":")[0];
             int port = Integer.parseInt(serviceAddress.split(":")[1]);
@@ -36,5 +34,9 @@ public class ConnectionManager {
         }
 
         return clientConnection;
+    }
+
+    public void removeConnection(String adress){
+        connections.remove(adress);
     }
 }

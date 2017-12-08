@@ -2,7 +2,6 @@ package top.tzy.rpc.client;
 
 import top.tzy.rpc.common.protocol.RpcRequest;
 import top.tzy.rpc.common.protocol.RpcResponse;
-import top.tzy.rpc.registry.ServiceDiscover;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
