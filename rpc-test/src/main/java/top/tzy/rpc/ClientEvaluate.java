@@ -17,11 +17,14 @@ public class ClientEvaluate {
         RpcServiceProxy proxy = new RpcServiceProxy();
         final HelloService service = proxy.create(HelloService.class);
         System.out.println(processors);
-        for (int i=0;i<5000;i++){
-            String str = service.hello("tuzhenyu");
-            System.out.println(str+i);
-        }
 
+        long count0 = 500000;
+        long start0 = System.currentTimeMillis();
+        for (long i=0;i<count0;i++){
+            service.hello("tuzhenyu");
+        }
+        long second0 = (System.currentTimeMillis() - start0) / 1000;
+        System.out.println("Request count: " + count0 + ", time: " + second0 + " second, qps: " + count0 / second0);
         final int t = 50000;
         final int step = 2;
         long start = System.currentTimeMillis();

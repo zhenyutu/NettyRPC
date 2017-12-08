@@ -4,12 +4,12 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
+import top.tzy.rpc.client.loadBalance.LoadBalanceStrategies;
 import top.tzy.rpc.common.Constant;
 import top.tzy.rpc.registry.ZookeeperFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -27,7 +27,7 @@ public class ServiceDiscover {
         return INSTANCE;
     }
 
-    public ServiceDiscover(){
+    private ServiceDiscover(){
         final CuratorFramework client = ZookeeperFactory.create();
         try {
             List<String> interfaceNames = client.getChildren().forPath(Constant.Server_Path);
@@ -116,11 +116,13 @@ public class ServiceDiscover {
         if (size == 1) {
             address = addressList.get(0);
         } else {
-            address = addressList.get(new Random().nextInt(size));
+            address = LoadBalanceStrategies.Random_Strategy.loadBalance(addressList);
         }
 
         return address;
     }
+
+
 
     private String convertPathToName(String path){
         String[] strs = path.split("/");
