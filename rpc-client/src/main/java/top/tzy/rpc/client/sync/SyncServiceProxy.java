@@ -19,12 +19,12 @@ public class SyncServiceProxy {
         return (T) Proxy.newProxyInstance(
                 interfaceClass.getClassLoader(),
                 new Class[]{interfaceClass},
-                new ProxyHandler()
+                new SyncProxyHandler()
         );
     }
 }
 
-class ProxyHandler implements InvocationHandler {
+class SyncProxyHandler implements InvocationHandler {
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         RpcRequest request = new RpcRequest();

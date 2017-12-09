@@ -1,6 +1,7 @@
 package top.tzy.rpc.client;
 
 import com.alibaba.fastjson.JSON;
+import com.sun.corba.se.impl.orbutil.concurrent.Sync;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -12,15 +13,21 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import top.tzy.rpc.client.async.AsyncFutureResult;
 import top.tzy.rpc.client.sync.SyncFutureResult;
 import top.tzy.rpc.common.protocol.RpcRequest;
 import top.tzy.rpc.common.protocol.RpcResponse;
+
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by tuzhenyu on 17-12-4.
  * @author tuzhenyu
  */
 public class ClientConnection {
+    private static ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(16, 16, 600L, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(65536));
     private ChannelFuture f = null;
 
     public ClientConnection(String host, int port){
@@ -51,8 +58,19 @@ public class ClientConnection {
         SyncFutureResult futureResult = new SyncFutureResult(request);
         f.channel().writeAndFlush(JSON.toJSONString(request)+"\n");
 
-
         return futureResult.get();
+    }
+
+    public AsyncFutureResult call(RpcRequest request){
+        if (f==null)
+            throw new RuntimeException("channel is empty");
+        AsyncFutureResult futureResult = new AsyncFutureResult(request);
+        f.channel().writeAndFlush(JSON.toJSONString(request)+"\n");
+        return futureResult;
+    }
+
+    public static void submit(Runnable task){
+        threadPoolExecutor.submit(task);
     }
 
 }
