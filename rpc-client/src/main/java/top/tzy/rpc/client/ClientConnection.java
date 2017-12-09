@@ -12,6 +12,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import top.tzy.rpc.client.sync.SyncFutureResult;
 import top.tzy.rpc.common.protocol.RpcRequest;
 import top.tzy.rpc.common.protocol.RpcResponse;
 
@@ -47,7 +48,7 @@ public class ClientConnection {
     public RpcResponse send(RpcRequest request)throws Exception{
         if (f==null)
             throw new RuntimeException("channel is empty");
-        FutureResult futureResult = new FutureResult(request);
+        SyncFutureResult futureResult = new SyncFutureResult(request);
         f.channel().writeAndFlush(JSON.toJSONString(request)+"\n");
 
 

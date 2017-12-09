@@ -1,4 +1,4 @@
-package top.tzy.rpc.client;
+package top.tzy.rpc.client.sync;
 
 import top.tzy.rpc.common.protocol.RpcRequest;
 import top.tzy.rpc.common.protocol.RpcResponse;
@@ -12,15 +12,15 @@ import java.util.concurrent.locks.ReentrantLock;
  * Created by tuzhenyu on 17-12-4.
  * @author tuzhenyu
  */
-public class FutureResult {
+public class SyncFutureResult {
 
-    private static final ConcurrentHashMap<String,FutureResult> results = new ConcurrentHashMap<String, FutureResult>();
+    private static final ConcurrentHashMap<String,SyncFutureResult> results = new ConcurrentHashMap<String, SyncFutureResult>();
     private RpcResponse response = null;
 
     private final Lock lock = new ReentrantLock();
     private final Condition condition = lock.newCondition();
 
-    public FutureResult(RpcRequest request){
+    public SyncFutureResult(RpcRequest request){
         results.put(request.getId(),this);
     }
 
@@ -43,7 +43,7 @@ public class FutureResult {
     }
 
     public static void receive(RpcResponse response){
-        FutureResult result = results.get(response.getId());
+        SyncFutureResult result = results.get(response.getId());
         if (result!=null){
             Lock lock = result.lock;
             lock.lock();

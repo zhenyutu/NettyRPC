@@ -3,6 +3,7 @@ package top.tzy.rpc.client;
 import com.alibaba.fastjson.JSONObject;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import top.tzy.rpc.client.sync.SyncFutureResult;
 import top.tzy.rpc.common.protocol.RpcResponse;
 
 
@@ -15,7 +16,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         RpcResponse response = JSONObject.parseObject(msg.toString(),RpcResponse.class);
-        FutureResult.receive(response);
+        SyncFutureResult.receive(response);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package top.tzy.rpc;
 
 import top.tzy.rpc.api.HelloService;
-import top.tzy.rpc.client.RpcServiceProxy;
+import top.tzy.rpc.client.sync.SyncServiceProxy;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicLong;
@@ -14,11 +14,11 @@ public class ClientEvaluate {
     private static int processors = Runtime.getRuntime().availableProcessors();
 
     public static void main(String[] args) throws Exception{
-        RpcServiceProxy proxy = new RpcServiceProxy();
+        SyncServiceProxy proxy = new SyncServiceProxy();
         final HelloService service = proxy.create(HelloService.class);
         System.out.println(processors);
 
-        long count0 = 500000;
+        long count0 = 5000;
         long start0 = System.currentTimeMillis();
         for (long i=0;i<count0;i++){
             service.hello("tuzhenyu");

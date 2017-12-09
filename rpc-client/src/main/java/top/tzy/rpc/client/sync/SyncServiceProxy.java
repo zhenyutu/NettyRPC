@@ -1,5 +1,7 @@
-package top.tzy.rpc.client;
+package top.tzy.rpc.client.sync;
 
+import top.tzy.rpc.client.ClientConnection;
+import top.tzy.rpc.client.ConnectionManager;
 import top.tzy.rpc.common.protocol.RpcRequest;
 import top.tzy.rpc.common.protocol.RpcResponse;
 
@@ -12,7 +14,7 @@ import java.util.UUID;
  * Created by tuzhenyu on 17-12-5.
  * @author tuzhenyu
  */
-public class RpcServiceProxy {
+public class SyncServiceProxy {
     public <T> T create(Class interfaceClass){
         return (T) Proxy.newProxyInstance(
                 interfaceClass.getClassLoader(),
