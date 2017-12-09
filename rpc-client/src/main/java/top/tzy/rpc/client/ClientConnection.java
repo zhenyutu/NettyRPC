@@ -61,6 +61,21 @@ public class ClientConnection {
         return futureResult.get();
     }
 
+    public RpcResponse sendTimeout(RpcRequest request)throws Exception{
+        RpcResponse response = null;
+        if (f==null)
+            throw new RuntimeException("channel is empty");
+        SyncFutureResult futureResult = new SyncFutureResult(request);
+        f.channel().writeAndFlush(JSON.toJSONString(request)+"\n");
+
+        for (;;){
+            response = futureResult.get(100);
+            if (response!=null)
+                break;
+        }
+        return response;
+    }
+
     public AsyncFutureResult call(RpcRequest request){
         if (f==null)
             throw new RuntimeException("channel is empty");
